@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -16,8 +18,23 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Defines an EmployeeEntity used to represent employee rows in the database.
  */
 @Entity(name = "Employee")
+@NamedQueries(
+  {
+    @NamedQuery(
+      name = EmployeeEntity.NAMED_QUERY_FIND_BY_ID,
+      query = "SELECT e from Employee e WHERE e.id = :id"
+    ),
+    @NamedQuery(
+      name = EmployeeEntity.NAMED_QUERY_LIST_ALL,
+      query = "SELECT e from Employee e"
+    )
+  })
 @XmlRootElement
 public class EmployeeEntity implements Serializable {
+
+    public static final String NAMED_QUERY_FIND_BY_ID = "EmployeeEntity.findById";
+
+    public static final String NAMED_QUERY_LIST_ALL = "EmployeeEntity.listAll";
 
 	private static final long serialVersionUID = 1L;
 
