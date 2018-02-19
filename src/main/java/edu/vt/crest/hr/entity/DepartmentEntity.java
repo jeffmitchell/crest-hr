@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
@@ -20,8 +22,23 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Defines a DepartmentEntity used to represent department rows in the database.
  */
 @Entity(name = "Department")
+@NamedQueries(
+  {
+    @NamedQuery(
+      name = DepartmentEntity.NAMED_QUERY_FIND_BY_ID,
+      query = "SELECT d from Department d WHERE d.id = :id"
+    ),
+    @NamedQuery(
+      name = DepartmentEntity.NAMED_QUERY_LIST_ALL,
+      query = "SELECT d from Department d"
+    )
+  })
 @XmlRootElement
 public class DepartmentEntity implements Serializable {
+
+    public static final String NAMED_QUERY_FIND_BY_ID = "DepartmentEntity.findById";
+
+    public static final String NAMED_QUERY_LIST_ALL = "DepartmentEntity.listAll";
 
 	private static final long serialVersionUID = 1L;
 
