@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -36,8 +38,15 @@ public class DepartmentResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(DepartmentEntity department) {
-		return null;
+	public Response create(@Valid final DepartmentEntity department) {
+        try {
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(departmentService.createDepartment(department))
+                    .build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+        }
 	}
 
 	/**
@@ -48,8 +57,17 @@ public class DepartmentResource {
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findById(@PathParam("id") Long id) {
-		return null;
+	public Response findById(@PathParam("id") final Long id) {
+        try {
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(departmentService.findById(id))
+                    .build();
+        } catch (NoResultException ex) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+        }
 	}
 
 	/**
@@ -61,10 +79,9 @@ public class DepartmentResource {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<DepartmentEntity> listAll(@QueryParam("start") Integer startPosition,
-			@QueryParam("max") Integer maxResult) {
-
-		return null;
+	public List<DepartmentEntity> listAll(@QueryParam("start") final Integer startPosition,
+			@QueryParam("max") final Integer maxResult) {
+        return departmentService.listAll(startPosition, maxResult);
 	}
 
 	/**
@@ -77,8 +94,17 @@ public class DepartmentResource {
 	@Path("/{id:[0-9][0-9]*}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") Long id, DepartmentEntity department) {
-		return null;
+	public Response update(@PathParam("id") final Long id, @Valid final DepartmentEntity department) {
+        try {
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(departmentService.update(id, department))
+                    .build();
+        } catch (NoResultException ex) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+        }
 	}
 
 }
