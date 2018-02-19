@@ -1,15 +1,19 @@
 package edu.vt.crest.hr.entity;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Id;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,15 +32,19 @@ public class DepartmentEntity implements Serializable {
 
 	@Version
 	@Column(name = "version")
+    @Min(Integer.MIN_VALUE)
+    @Max(Integer.MAX_VALUE)
 	private int version;
 
 	@Column
+    @Size(min = 1)
 	private String name;
 
 	@Column
+    @Size(min = 1)
 	private String identifier;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "department_id", referencedColumnName = "id")
 	private Set<EmployeeEntity> employees;
 
